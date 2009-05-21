@@ -39,7 +39,9 @@
 
 #pragma GCC system_header
 
+#ifdef _GLIBCXX_HAVE_LOCALE_H
 #include <clocale>
+#endif
 
 #define _GLIBCXX_NUM_CATEGORIES 0
 
@@ -58,6 +60,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		   const int __size __attribute__((__unused__)),
 		   const char* __fmt, ...)
   {
+#ifndef __MINGW32CE__
     char* __old = std::setlocale(LC_NUMERIC, 0);
     char* __sav = 0;
     if (__builtin_strcmp(__old, "C"))
@@ -67,6 +70,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	__builtin_memcpy(__sav, __old, __len);
 	std::setlocale(LC_NUMERIC, "C");
       }
+#endif
 
     __builtin_va_list __args;
     __builtin_va_start(__args, __fmt);
@@ -79,11 +83,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 
     __builtin_va_end(__args);
 
+#ifndef __MINGW32CE__
     if (__sav)
       {
 	std::setlocale(LC_NUMERIC, __sav);
 	delete [] __sav;
       }
+#endif
     return __ret;
   }
 
