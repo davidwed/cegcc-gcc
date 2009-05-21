@@ -50,6 +50,7 @@
 #include <ext/atomicity.h>
 #include <ext/concurrence.h>
 #include <bits/move.h>
+#include <bits/runtimeopts.h>
 
 namespace __gnu_cxx _GLIBCXX_VISIBILITY(default)
 {
@@ -205,12 +206,13 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  if (__n > this->max_size())
 	    std::__throw_bad_alloc();
 
-	  // If there is a race through here, assume answer from getenv
-	  // will resolve in same direction.  Inspired by techniques
-	  // to efficiently support threading found in basic_string.h.
+ 	  // If there is a race through here, assume answer from
+ 	  // runtime_opts::force_new_p will resolve in same direction.
+ 	  // Inspired by techniques to efficiently support threading
+ 	  // found in basic_string.h.
 	  if (_S_force_new == 0)
 	    {
-	      if (std::getenv("GLIBCXX_FORCE_NEW"))
+	      if (runtime_opts::force_new_p())
 		__atomic_add_dispatch(&_S_force_new, 1);
 	      else
 		__atomic_add_dispatch(&_S_force_new, -1);

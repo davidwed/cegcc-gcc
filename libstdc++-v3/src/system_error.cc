@@ -45,7 +45,11 @@ namespace
     {
       // XXX locale issues: how does one get or set loc.
       // _GLIBCXX_HAVE_STRERROR_L, strerror_l(i, cloc)
+#ifndef __MINGW32CE__
       return string(strerror(i));
+#else
+      return string("unknown error %d", i);
+#endif
     }
   };
 
@@ -62,7 +66,11 @@ namespace
     {
       // XXX locale issues: how does one get or set loc.
       // _GLIBCXX_HAVE_STRERROR_L, strerror_l(i, cloc)
+#ifndef __MINGW32CE__
       return string(strerror(i));
+#else
+      return string("unknown error %d", i);
+#endif
     }
   };
 

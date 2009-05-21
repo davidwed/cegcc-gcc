@@ -33,6 +33,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <functional>
+#include <bits/runtimeopts.h>
 
 using namespace std;
 
@@ -760,14 +761,7 @@ namespace __gnu_debug
   void
   _Error_formatter::_M_get_max_length() const throw ()
   {
-    const char* __nptr = std::getenv("GLIBCXX_DEBUG_MESSAGE_LENGTH");
-    if (__nptr)
-      {
-	char* __endptr;
-	const unsigned long __ret = std::strtoul(__nptr, &__endptr, 0);
-	if (*__nptr != '\0' && *__endptr == '\0')
-	  _M_max_length = __ret;
-      }
+    _M_max_length = __gnu_cxx::runtime_opts::debug_message_length ();
   }
 
   // Instantiations.

@@ -121,16 +121,24 @@ namespace std
   using ::putc;
   using ::putchar;
   using ::puts;
+#ifndef __MINGW32CE__
   using ::remove;
+#endif
   using ::rename;
+#ifndef __MINGW32CE__
   using ::rewind;
+#endif
   using ::scanf;
+#ifndef __MINGW32CE__
   using ::setbuf;
+#endif
   using ::setvbuf;
   using ::sprintf;
   using ::sscanf;
+#ifndef __MINGW32CE__
   using ::tmpfile;
   using ::tmpnam;
+#endif
   using ::ungetc;
   using ::vfprintf;
   using ::vprintf;

@@ -22,7 +22,9 @@
 // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 // <http://www.gnu.org/licenses/>.
 
+#ifdef _GLIBCXX_HAVE_LOCALE_H
 #include <clocale>
+#endif
 #include <cstring>
 #include <cstdlib>
 #include <locale>
@@ -44,6 +46,9 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 	  _M_impl = new _Impl(__s, 1);
 	else
 	  {
+#ifdef __MINGW32CE__
+	    (_M_impl = _S_classic)->_M_add_reference();
+#else
 	    // Get it from the environment.
 	    char* __env = std::getenv("LC_ALL");
 	    // If LC_ALL is set we are done.
@@ -136,6 +141,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
 		else
 		  _M_impl = new _Impl(__lang.c_str(), 1);
 	      }
+#endif
 	  }
       }
     else

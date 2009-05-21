@@ -16256,7 +16256,6 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 			using ::wcscat;
 			using ::wcschr;
 			using ::wcscmp;
-			using ::wcscoll;
 			using ::wcscpy;
 			using ::wcscspn;
 			using ::wcsftime;
@@ -16273,7 +16272,6 @@ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
 			using ::wcstok;
 			using ::wcstol;
 			using ::wcstoul;
-			using ::wcsxfrm;
 			using ::wctob;
 			using ::wmemchr;
 			using ::wmemcmp;
@@ -16947,6 +16945,83 @@ _ACEOF
 if ac_fn_cxx_try_compile "$LINENO"; then :
 
 $as_echo "#define HAVE_WCSTOF 1" >>confdefs.h
+
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <wchar.h>
+                    namespace test { using ::wcscoll; }
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+$as_echo "#define HAVE_WCSCOLL 1" >>confdefs.h
+
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <wchar.h>
+                    namespace test { using ::wcsxfrm; }
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+$as_echo "#define HAVE_WCSXFRM 1" >>confdefs.h
+
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+    # The next two checks should probably be moved somewhere else.
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <string.h>
+                    namespace test { using ::strcoll; }
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+$as_echo "#define HAVE_STRCOLL 1" >>confdefs.h
+
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+
+    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <string.h>
+                    namespace test { using ::strxfrm; }
+int
+main ()
+{
+
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+
+$as_echo "#define HAVE_STRXFRM 1" >>confdefs.h
 
 fi
 rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
@@ -19523,6 +19598,22 @@ locale.h machine/endian.h machine/param.h nan.h stdint.h stdlib.h string.h \
 strings.h sys/ipc.h sys/isa_defs.h sys/machine.h sys/param.h \
 sys/resource.h sys/sem.h sys/stat.h sys/time.h sys/types.h unistd.h \
 wchar.h wctype.h
+do :
+  as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+eval as_val=\$$as_ac_Header
+   if test "x$as_val" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+_ACEOF
+
+fi
+
+done
+
+
+# For WinCE
+for ac_header in errno.h signal.h fcntl.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
@@ -25445,6 +25536,124 @@ done
   fi
 
 
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for getenv declaration" >&5
+$as_echo_n "checking for getenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_getenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_getenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ getenv(0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_getenv_use=yes
+else
+  glibcxx_cv_func_getenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_getenv_use" >&5
+$as_echo "$glibcxx_cv_func_getenv_use" >&6; }
+  if test x$glibcxx_cv_func_getenv_use = x"yes"; then
+    for ac_func in getenv
+do :
+  ac_fn_c_check_func "$LINENO" "getenv" "ac_cv_func_getenv"
+if test "x$ac_cv_func_getenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_GETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
+
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for setenv declaration" >&5
+$as_echo_n "checking for setenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_setenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_setenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ setenv(0, 0, 0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_setenv_use=yes
+else
+  glibcxx_cv_func_setenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_setenv_use" >&5
+$as_echo "$glibcxx_cv_func_setenv_use" >&6; }
+  if test x$glibcxx_cv_func_setenv_use = x"yes"; then
+    for ac_func in setenv
+do :
+  ac_fn_c_check_func "$LINENO" "setenv" "ac_cv_func_setenv"
+if test "x$ac_cv_func_setenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
 
 
   CXXFLAGS="$ac_save_CXXFLAGS"
@@ -32349,6 +32558,124 @@ done
 
 
 
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for getenv declaration" >&5
+$as_echo_n "checking for getenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_getenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_getenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ getenv(0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_getenv_use=yes
+else
+  glibcxx_cv_func_getenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_getenv_use" >&5
+$as_echo "$glibcxx_cv_func_getenv_use" >&6; }
+  if test x$glibcxx_cv_func_getenv_use = x"yes"; then
+    for ac_func in getenv
+do :
+  ac_fn_c_check_func "$LINENO" "getenv" "ac_cv_func_getenv"
+if test "x$ac_cv_func_getenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_GETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
+
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for setenv declaration" >&5
+$as_echo_n "checking for setenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_setenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_setenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ setenv(0, 0, 0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_setenv_use=yes
+else
+  glibcxx_cv_func_setenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_setenv_use" >&5
+$as_echo "$glibcxx_cv_func_setenv_use" >&6; }
+  if test x$glibcxx_cv_func_setenv_use = x"yes"; then
+    for ac_func in setenv
+do :
+  ac_fn_c_check_func "$LINENO" "setenv" "ac_cv_func_setenv"
+if test "x$ac_cv_func_setenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
+
+
   CXXFLAGS="$ac_save_CXXFLAGS"
 
 
@@ -38162,6 +38489,124 @@ done
   fi
 
 
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for getenv declaration" >&5
+$as_echo_n "checking for getenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_getenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_getenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ getenv(0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_getenv_use=yes
+else
+  glibcxx_cv_func_getenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_getenv_use" >&5
+$as_echo "$glibcxx_cv_func_getenv_use" >&6; }
+  if test x$glibcxx_cv_func_getenv_use = x"yes"; then
+    for ac_func in getenv
+do :
+  ac_fn_c_check_func "$LINENO" "getenv" "ac_cv_func_getenv"
+if test "x$ac_cv_func_getenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_GETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
+
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for setenv declaration" >&5
+$as_echo_n "checking for setenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_setenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_setenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ setenv(0, 0, 0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_setenv_use=yes
+else
+  glibcxx_cv_func_setenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_setenv_use" >&5
+$as_echo "$glibcxx_cv_func_setenv_use" >&6; }
+  if test x$glibcxx_cv_func_setenv_use = x"yes"; then
+    for ac_func in setenv
+do :
+  ac_fn_c_check_func "$LINENO" "setenv" "ac_cv_func_setenv"
+if test "x$ac_cv_func_setenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
 
 
   CXXFLAGS="$ac_save_CXXFLAGS"
@@ -43992,6 +44437,124 @@ done
   fi
 
 
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for getenv declaration" >&5
+$as_echo_n "checking for getenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_getenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_getenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ getenv(0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_getenv_use=yes
+else
+  glibcxx_cv_func_getenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_getenv_use" >&5
+$as_echo "$glibcxx_cv_func_getenv_use" >&6; }
+  if test x$glibcxx_cv_func_getenv_use = x"yes"; then
+    for ac_func in getenv
+do :
+  ac_fn_c_check_func "$LINENO" "getenv" "ac_cv_func_getenv"
+if test "x$ac_cv_func_getenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_GETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
+
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for setenv declaration" >&5
+$as_echo_n "checking for setenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_setenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_setenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ setenv(0, 0, 0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_setenv_use=yes
+else
+  glibcxx_cv_func_setenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_setenv_use" >&5
+$as_echo "$glibcxx_cv_func_setenv_use" >&6; }
+  if test x$glibcxx_cv_func_setenv_use = x"yes"; then
+    for ac_func in setenv
+do :
+  ac_fn_c_check_func "$LINENO" "setenv" "ac_cv_func_setenv"
+if test "x$ac_cv_func_setenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
 
 
   CXXFLAGS="$ac_save_CXXFLAGS"
@@ -50498,6 +51061,124 @@ done
 
 
 
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for getenv declaration" >&5
+$as_echo_n "checking for getenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_getenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_getenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ getenv(0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_getenv_use=yes
+else
+  glibcxx_cv_func_getenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_getenv_use" >&5
+$as_echo "$glibcxx_cv_func_getenv_use" >&6; }
+  if test x$glibcxx_cv_func_getenv_use = x"yes"; then
+    for ac_func in getenv
+do :
+  ac_fn_c_check_func "$LINENO" "getenv" "ac_cv_func_getenv"
+if test "x$ac_cv_func_getenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_GETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
+
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for setenv declaration" >&5
+$as_echo_n "checking for setenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_setenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_setenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ setenv(0, 0, 0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_setenv_use=yes
+else
+  glibcxx_cv_func_setenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_setenv_use" >&5
+$as_echo "$glibcxx_cv_func_setenv_use" >&6; }
+  if test x$glibcxx_cv_func_setenv_use = x"yes"; then
+    for ac_func in setenv
+do :
+  ac_fn_c_check_func "$LINENO" "setenv" "ac_cv_func_setenv"
+if test "x$ac_cv_func_setenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
+
+
   CXXFLAGS="$ac_save_CXXFLAGS"
 
     $as_echo "#define _GLIBCXX_USE_RANDOM_TR1 1" >>confdefs.h
@@ -50872,7 +51553,7 @@ _ACEOF
   fi
 
     ;;
-  *-mingw32*)
+  *-mingw32*|*-cegcc*)
 
   # If we're not using GNU ld, then there's no point in even trying these
   # tests.  Check for that first.  We should have already tested for gld
@@ -56665,6 +57346,124 @@ done
   fi
 
 
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for getenv declaration" >&5
+$as_echo_n "checking for getenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_getenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_getenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ getenv(0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_getenv_use=yes
+else
+  glibcxx_cv_func_getenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_getenv_use" >&5
+$as_echo "$glibcxx_cv_func_getenv_use" >&6; }
+  if test x$glibcxx_cv_func_getenv_use = x"yes"; then
+    for ac_func in getenv
+do :
+  ac_fn_c_check_func "$LINENO" "getenv" "ac_cv_func_getenv"
+if test "x$ac_cv_func_getenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_GETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
+
+
+
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for setenv declaration" >&5
+$as_echo_n "checking for setenv declaration... " >&6; }
+  if test x${glibcxx_cv_func_setenv_use+set} != xset; then
+    if test "${glibcxx_cv_func_setenv_use+set}" = set; then :
+  $as_echo_n "(cached) " >&6
+else
+
+
+      ac_ext=cpp
+ac_cpp='$CXXCPP $CPPFLAGS'
+ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+
+      cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+/* end confdefs.h.  */
+#include <stdlib.h>
+int
+main ()
+{
+ setenv(0, 0, 0);
+  ;
+  return 0;
+}
+_ACEOF
+if ac_fn_cxx_try_compile "$LINENO"; then :
+  glibcxx_cv_func_setenv_use=yes
+else
+  glibcxx_cv_func_setenv_use=no
+fi
+rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+      ac_ext=c
+ac_cpp='$CPP $CPPFLAGS'
+ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ac_compiler_gnu=$ac_cv_c_compiler_gnu
+
+
+fi
+
+  fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_func_setenv_use" >&5
+$as_echo "$glibcxx_cv_func_setenv_use" >&6; }
+  if test x$glibcxx_cv_func_setenv_use = x"yes"; then
+    for ac_func in setenv
+do :
+  ac_fn_c_check_func "$LINENO" "setenv" "ac_cv_func_setenv"
+if test "x$ac_cv_func_setenv" = x""yes; then :
+  cat >>confdefs.h <<_ACEOF
+#define HAVE_SETENV 1
+_ACEOF
+
+fi
+done
+
+  fi
 
 
   CXXFLAGS="$ac_save_CXXFLAGS"
