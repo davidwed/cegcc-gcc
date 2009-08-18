@@ -361,7 +361,7 @@ tinfo_name (tree type, bool mark_private)
   int length;
   tree name_string;
 
-  name = mangle_type_string (type);
+  name = mangle_type_string_for_rtti (type);
   length = strlen (name);
 
   if (mark_private)
