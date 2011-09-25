@@ -143,7 +143,13 @@ _GLIBCXX_BEGIN_NAMESPACE(std)
       
       virtual void*
       _M_get_deleter(const std::type_info& __ti)
-      { return __ti == typeid(_Deleter) ? &_M_del._M_del : 0; }
+      {
+#ifdef __GXX_RTTI
+	      return __ti == typeid(_Deleter) ? &_M_del._M_del : 0;
+#else
+	      return 0;
+#endif
+      }
       
     protected:
       _My_Deleter      _M_del;  // copy constructor must not throw
@@ -201,9 +207,13 @@ _GLIBCXX_BEGIN_NAMESPACE(std)
       virtual void*
       _M_get_deleter(const std::type_info& __ti)
       {
+#ifdef __GXX_RTTI
         return __ti == typeid(_Sp_make_shared_tag)
                ? static_cast<void*>(&_M_storage)
                : _Base_type::_M_get_deleter(__ti);
+#else
+	return 0;
+#endif
       }
       
     private:
@@ -849,6 +859,7 @@ _GLIBCXX_BEGIN_NAMESPACE(std)
         owner_before(__weak_ptr<_Tp1, _Lp> const& __rhs) const
         { return _M_refcount._M_less(__rhs._M_refcount); }
 
+#ifdef __GXX_RTTI
     protected:
       // This constructor is non-standard, it is used by allocate_shared.
       template<typename _Alloc, typename... _Args>
@@ -867,6 +878,7 @@ _GLIBCXX_BEGIN_NAMESPACE(std)
                typename... _Args>
         friend __shared_ptr<_Tp1, _Lp1>
         __allocate_shared(_Alloc __a, _Args&&... __args);
+#endif
 
     private:
       void*
@@ -1002,8 +1014,13 @@ _GLIBCXX_BEGIN_NAMESPACE(std)
   template<typename _Del, typename _Tp, _Lock_policy _Lp>
     inline _Del*
     get_deleter(const __shared_ptr<_Tp, _Lp>& __p)
-    { return static_cast<_Del*>(__p._M_get_deleter(typeid(_Del))); }
-
+    {
+#ifdef __GXX_RTTI
+      return static_cast<_Del*>(__p._M_get_deleter(typeid(_Del)));
+#else
+      return 0;
+#endif
+    }
 
   template<typename _Tp, _Lock_policy _Lp>
     class __weak_ptr
