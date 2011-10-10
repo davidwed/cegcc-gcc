@@ -29999,6 +29999,7 @@ msgstr "« %T::%D » n'est pas un déclarateur valide"
 
 #: cp/decl.c:8124
 #, gcc-internal-format
+<<<<<<< current
 msgid "typedef declaration invalid in parameter declaration"
 msgstr "déclaration typedef invalide dans le paramètre de la déclaration"
 
@@ -43359,3 +43360,6 @@ msgstr "« -gnat » mal épellé comme « -gant »"
 
 #~ msgid "(debug) trace lexical analysis"
 #~ msgstr "(débug) trace l'analyse lexicale"
+=======
+msgid "typedef declaration invalid in parameter 
+>>>>>>> patched

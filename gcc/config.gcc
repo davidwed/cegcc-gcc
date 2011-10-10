@@ -794,14 +794,40 @@ arm*-*-elf)
 arm*-wince-pe*)
 	tm_file="arm/semi.h arm/aout.h arm/arm.h arm/coff.h dbxcoff.h arm/pe.h arm/wince-pe.h"
 	tmake_file="arm/t-arm arm/t-wince-pe"
-	extra_options="${extra_options} arm/pe.opt"
-	extra_objs="pe.o"
+	extra_options="${extra_options} arm/pe.opt arm/cegcc.opt"
+	extra_objs="pe.o pe-stubs.o"
+	extra_gcc_objs=cegcc1.o
+	cxx_target_objs=pe-cxx.o
+	target_gtfiles="\$(srcdir)/config/arm/pe.c"
+	case ${enable_threads} in
+	  "" | yes | win32)
+	  thread_file='win32'
+	  tmake_file="${tmake_file} i386/t-gthr-win32"
+	  ;;
+	esac
+	;;
+arm*-*-cegcc*)
+	tm_file="arm/semi.h arm/aout.h arm/arm.h arm/coff.h dbxcoff.h arm/pe.h arm/wince-pe.h arm/wince-cegcc.h"
+	tmake_file="arm/t-arm arm/t-wince-pe arm/t-wince-cegcc"
+	extra_options="${extra_options} arm/pe.opt arm/cegcc.opt"
+	extra_objs="pe.o pe-stubs.o"
+	extra_gcc_objs=cegcc1.o
+	cxx_target_objs=pe-cxx.o
+	target_gtfiles="\$(srcdir)/config/arm/pe.c"
+	case ${enable_threads} in
+	  "" | yes | win32)
+	  thread_file='win32'
+	  tmake_file="${tmake_file} i386/t-gthr-win32"
+	  ;;
+	esac
 	;;
 arm-*-pe*)
 	tm_file="arm/semi.h arm/aout.h arm/arm.h arm/coff.h dbxcoff.h arm/pe.h"
 	tmake_file="arm/t-arm arm/t-pe"
 	extra_options="${extra_options} arm/pe.opt"
-	extra_objs="pe.o"
+	extra_objs="pe.o pe-stubs.o"
+	cxx_target_objs=pe-cxx.o
+	target_gtfiles="\$(srcdir)/config/arm/pe.c"
 	;;
 avr-*-rtems*)
 	tm_file="avr/avr.h dbxelf.h avr/rtems.h rtems.h"
@@ -1272,6 +1298,24 @@ i[34567]86-*-pe | i[34567]86-*-cygwin*)
 		thread_file='posix'
 	fi
 	;;
+arm-*-mingw32*)
+	tm_file="arm/semi.h arm/aout.h ${tm_file} arm/coff.h dbxcoff.h arm/pe.h arm/wince-pe.h arm/mingw32.h"
+# 	well, we're not building a native compiler, are we? :-) ...
+# 	xm_file=arm/xm-mingw32.h
+ 	tmake_file="${tmake_file} arm/t-arm arm/t-wince-pe arm/t-cygming arm/t-mingw32"
+ 	target_gtfiles="\$(srcdir)/config/arm/pe.c"
+ 	extra_options="${extra_options} arm/pe.opt arm/cygming.opt"
+ 	extra_objs="pe.o pe-stubs.o"
+	c_target_objs="${c_target_objs} \$(srcdir)/config/i386/msformat-c.o"
+ 	cxx_target_objs="pe-cxx.o \$(srcdir)/config/i386/msformat-c.o"
+	default_use_cxa_atexit=yes
+ 	case ${enable_threads} in
+ 	  "" | yes | win32)
+ 	  thread_file='win32'
+	  tmake_file="${tmake_file} i386/t-gthr-win32"
+ 	  ;;
+ 	esac
+ 	;;
 i[34567]86-*-mingw* | x86_64-*-mingw*)
 	tm_file="${tm_file} i386/unix.h i386/bsd.h i386/gas.h dbxcoff.h i386/cygming.h i386/mingw32.h"
 	xm_file=i386/xm-mingw32.h
@@ -1309,6 +1353,10 @@ i[34567]86-*-mingw* | x86_64-*-mingw*)
 			;;
 	esac
 	case ${target} in
+		*-mingw32ce*)
+			tm_file="${tm_file} i386/mingw32ce.h"
+			tmake_file="${tmake_file} i386/t-wince"
+			;;
  		*mingw32crt*)
  			tm_file="${tm_file} i386/crtdll.h"
  			;;

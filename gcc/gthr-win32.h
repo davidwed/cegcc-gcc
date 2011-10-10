@@ -67,9 +67,12 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 #define __GTHREADS 1
 
-#include <errno.h>
 #ifdef __MINGW32__
 #include <_mingw.h>
+#endif
+
+#ifdef UNDER_CE
+# define __GTHREAD_HIDE_WIN32API 1
 #endif
 
 #ifdef _LIBOBJC
@@ -362,7 +365,7 @@ typedef struct {
 #define __GTHREAD_RECURSIVE_MUTEX_INIT_DEFAULT {-1, 0, 0, 0}
 
 #if __MINGW32_MAJOR_VERSION >= 1 || \
-  (__MINGW32_MAJOR_VERSION == 0 && __MINGW32_MINOR_VERSION > 2)
+  (__MINGW32_MAJOR_VERSION == 0 && __MINGW32_MINOR_VERSION > 2) || defined(__CEGCC__)
 #define MINGW32_SUPPORTS_MT_EH 1
 /* Mingw runtime >= v0.3 provides a magic variable that is set to nonzero
    if -mthreads option was specified, or 0 otherwise. This is to get around
@@ -583,6 +586,8 @@ __gthread_key_create (__gthread_key_t *__key,
       /* Mingw runtime will run the dtors in reverse order for each thread
          when the thread exits.  */
       __status = __mingwthr_key_dtor (*__key, __dtor);
+#else
+      (void)dtor;
 #endif
     }
   else

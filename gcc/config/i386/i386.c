@@ -30020,4 +30020,117 @@ ix86_enum_va_list (int idx, const char **pname, tree *ptree)
 
 struct gcc_target targetm = TARGET_INITIALIZER;
 
+/* Called from ASM_DECLARE_FUNCTION_NAME in gcc/config/arm/wince-pe.h */
+const char *
+i386_exception_handler (FILE * ARG_UNUSED (fp), char *name, tree decl)
+{
+  tree attr, a2;
+
+  attr = DECL_ATTRIBUTES (decl);
+
+  if (! attr)
+    return NULL;
+  a2 = lookup_attribute ("__exception_handler__", attr);
+  if (a2)
+      return IDENTIFIER_POINTER (TREE_VALUE (TREE_VALUE (a2)));
+
+  return NULL;
+}
+
+/* Handle a "exception_handler" attribute.
+  
+   One argument is required : the name of a function to call in case of exceptions.
+   Example syntax :
+  
+   int main(int argc, char *argv[])
+           __attribute__((__exception_handler__(handler))); */
+
+tree
+i386_handle_exception_handler_attribute (tree *node, tree name,
+				tree args,
+				int ARG_UNUSED (flags),
+				bool *no_add_attrs)
+{
+  if (TREE_CODE (*node) == FUNCTION_DECL)
+    {
+      tree a;
+
+      /* We need to pass the name of the exception handler. The
+         right code then gets generated from config/arm/wince-pe.h
+	 or similar, the assembler and linker will do the hard work.
+
+	 FIX ME We don't support passing data to the exception handler.
+
+	 This should be possible though, by using an additional argument
+	 which needs to fit in the dword (e.g. a pointer) and storing that
+	 in the right field as we do with the exception handler.  */
+	tree attr = NULL_TREE;
+
+	attr = tree_cons (get_identifier ("exception_handler"), args, attr);
+    }
+  else
+    {
+      warning (OPT_Wattributes, "%qs attribute ignored", IDENTIFIER_POINTER (name));
+      *no_add_attrs = true;
+    }
+
+  return NULL_TREE;
+}
+
+/* Called from ASM_DECLARE_FUNCTION_NAME in gcc/config/arm/wince-pe.h */
+const char *
+i386_dft_exception_handler (FILE * ARG_UNUSED (fp), char *name, tree decl)
+{
+  tree attr, a2;
+
+  attr = DECL_ATTRIBUTES (decl);
+
+  if (! attr)
+    return NULL;
+  a2 = lookup_attribute ("__dft_exception_handler__", attr);
+  if (a2)
+      return IDENTIFIER_POINTER (TREE_VALUE (TREE_VALUE (a2)));
+
+  return NULL;
+}
+
+/* Handle a "dft_exception_handler" attribute.
+  
+   One argument is required : the name of a function to call in case of exceptions.
+   Example syntax :
+  
+   int main(int argc, char *argv[])
+           __attribute__((__dft_exception_handler__(handler))); */
+
+tree
+i386_dft_handle_exception_handler_attribute (tree *node, tree name,
+				tree args,
+				int ARG_UNUSED (flags),
+				bool *no_add_attrs)
+{
+  if (TREE_CODE (*node) == FUNCTION_DECL)
+    {
+      tree a;
+
+      /* We need to pass the name of the exception handler. The
+         right code then gets generated from config/arm/wince-pe.h
+	 or similar, the assembler and linker will do the hard work.
+
+	 FIX ME We don't support passing data to the exception handler.
+
+	 This should be possible though, by using an additional argument
+	 which needs to fit in the dword (e.g. a pointer) and storing that
+	 in the right field as we do with the exception handler.  */
+	tree attr = NULL_TREE;
+	attr = tree_cons (get_identifier ("dft_exception_handler"), args, attr);
+    }
+  else
+    {
+      warning (OPT_Wattributes, "%qs attribute ignored", IDENTIFIER_POINTER (name));
+      *no_add_attrs = true;
+    }
+
+  return NULL_TREE;
+}
+
 #include "gt-i386.h"

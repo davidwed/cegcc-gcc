@@ -279,3 +279,17 @@ extern int asm_preferred_eh_data_format (int, int);
 #ifdef HAVE_ATTR_cpu
 extern enum attr_cpu ix86_schedule;
 #endif
+
+tree i386_dft_handle_exception_handler_attribute (tree *node,
+		tree name,
+		tree args,
+		int ARG_UNUSED (flags),
+		bool *no_add_attrs);
+const char * i386_dft_exception_handler (FILE *fp, char *name, tree decl);
+tree i386_handle_exception_handler_attribute (tree *node,
+		tree name,
+		tree args,
+		int ARG_UNUSED (flags),
+		bool *no_add_attrs);
+const char * i386_exception_handler (FILE *fp, char *name, tree decl);
+

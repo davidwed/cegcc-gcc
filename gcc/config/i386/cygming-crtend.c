@@ -63,7 +63,7 @@ static void *__JCR_END__[1]
 extern void __gcc_register_frame (void); 
 extern void __gcc_deregister_frame (void);
 
-static void register_frame_ctor (void) __attribute__ ((constructor (0)));
+// static void register_frame_ctor (void) __attribute__ ((constructor (0)));
 
 static void
 register_frame_ctor (void)

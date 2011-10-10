@@ -89,11 +89,15 @@ extern void *memset (void *, int, size_t);
 /* All systems have this header.  */
 #include <sys/types.h>
 
+#if 0
+/* FIXME */
+
 /* All systems have this header.  */
 #include <errno.h>
 
 #ifndef errno
 extern int errno;
+#endif
 #endif
 
 /* GCC (fixproto) guarantees these system headers exist.  */
