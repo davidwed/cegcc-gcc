@@ -74,6 +74,10 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #include <_mingw.h>
 #endif
 
+#ifdef UNDER_CE
+# define __GTHREAD_HIDE_WIN32API 1
+#endif
+
 #ifndef __UNUSED_PARAM
 #define __UNUSED_PARAM(x) x
 #endif
@@ -589,6 +593,8 @@ __gthread_key_create (__gthread_key_t *__key,
       /* Mingw runtime will run the dtors in reverse order for each thread
          when the thread exits.  */
       __status = __mingwthr_key_dtor (*__key, __dtor);
+#else
+      (void)dtor;
 #endif
     }
   else

@@ -1,4 +1,4 @@
-; PE-specific options for the ARM port
+; cegcc specific options.
 
 ; Copyright (C) 2005, 2007 Free Software Foundation, Inc.
 ;
@@ -18,10 +18,21 @@
 ; along with GCC; see the file COPYING3.  If not see
 ; <http://www.gnu.org/licenses/>.
 
-mnop-fun-dllimport
-Target Report Mask(NOP_FUN_DLLIMPORT)
-Ignore dllimport attribute for functions
+mcegcc
+Target
+Use the Cegcc interface
 
-mms-bitfields
-Target Report Mask(MS_BITFIELD_LAYOUT)
-Use native (MS) bitfield layout
+mdll
+Target RejectNegative
+Generate code for a DLL
+
+mnop-fun-dllimport
+Ignore dllimport for functions
+
+mthreads
+Target RejectNegative
+Use Cegcc-specific thread support
+
+mwin32
+Target
+Set Windows defines

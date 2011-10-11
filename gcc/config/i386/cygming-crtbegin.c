@@ -117,8 +117,11 @@ __gcc_register_frame (void)
       if (h)
 	register_class_fn = (void (*) (const void *))
 			     GetProcAddress (h, MN("_Jv_RegisterClasses"));
+#if 0
+      /* looks like .weak isn't working... */
       else
 	register_class_fn = _Jv_RegisterClasses;
+#endif
 
       if (register_class_fn)
 	register_class_fn (__JCR_LIST__);

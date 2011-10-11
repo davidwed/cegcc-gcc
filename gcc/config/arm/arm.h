@@ -2211,6 +2211,11 @@ extern int making_const_table;
     }								\
   while (0)
 
+#define TARGET_ASM_FILE_END arm_file_end
+#define TARGET_ATTRIBUTE_TABLE arm_attribute_table
+#define TARGET_ENCODE_SECTION_INFO  arm_encode_section_info
+#define TARGET_STRIP_NAME_ENCODING arm_strip_name_encoding
+
 #ifdef HAVE_GAS_MAX_SKIP_P2ALIGN
 /* To support -falign-* switches we need to use .p2align so
    that alignment directives in code sections will be padded
@@ -2459,5 +2464,15 @@ enum arm_builtins
 /* The maximum number of parallel loads or stores we support in an ldm/stm
    instruction.  */
 #define MAX_LDM_STM_OPS 4
+
+/* Flags to mark dllimport/dllexport.  Used by PE ports, but handy to
+   have defined always, to avoid ifdefing.  */
+#define SYMBOL_FLAG_DLLIMPORT		(SYMBOL_FLAG_MACH_DEP << 1)
+#define SYMBOL_REF_DLLIMPORT_P(X) \
+	((SYMBOL_REF_FLAGS (X) & SYMBOL_FLAG_DLLIMPORT) != 0)
+
+#define SYMBOL_FLAG_DLLEXPORT		(SYMBOL_FLAG_MACH_DEP << 2)
+#define SYMBOL_REF_DLLEXPORT_P(X) \
+	((SYMBOL_REF_FLAGS (X) & SYMBOL_FLAG_DLLEXPORT) != 0)
 
 #endif /* ! GCC_ARM_H */

@@ -68,9 +68,9 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define LSYM(x) .x
 #else
 #define __PLT__
-#define TYPE(x)
+#define TYPE(x) .def SYM(x); .scl 2; .type 32; .endef
 #define SIZE(x)
-#define LSYM(x) x
+#define LSYM(x) CONCAT1 (__LOCAL_LABEL_PREFIX__, x)
 #endif
 
 /* Function end macros.  Variants for interworking.  */
@@ -1447,7 +1447,7 @@ FUNC_START clzsi2
 2:	adr	r2, 1f
 	ldrb	r0, [r2, r0]
 	add	r0, r0, r1
-	bx lr
+	RET
 .align 2
 1:
 .byte 4, 3, 2, 2, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0

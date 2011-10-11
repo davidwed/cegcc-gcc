@@ -839,6 +839,11 @@ case "${target}" in
   i[[3456789]]86-w64-mingw*)
     noconfigdirs="$noconfigdirs expect target-libgloss target-newlib ${libgcj}"
     ;;
+  *-mingw32ce*)
+    target_configdirs="$target_configdirs target-winsup"
+    noconfigdirs="$noconfigdirs expect target-libgloss target-newlib ${libgcj}"
+    noconfigdirs="$noconfigdirs target-libiberty"
+    ;;
   i[[3456789]]86-*-mingw*)
     target_configdirs="$target_configdirs target-winsup"
     noconfigdirs="$noconfigdirs expect target-libgloss target-newlib ${libgcj}"
@@ -2428,7 +2433,7 @@ case "${target}" in
     extra_arflags_for_target=" -X32_64"
     extra_nmflags_for_target=" -B -X32_64"
     ;;
-  mips*-*-pe | sh*-*-pe | *arm-wince-pe)
+  mips*-*-pe | sh*-*-pe | arm*-wince-pe | arm*-*-mingw32ce* | arm*-*-cegcc*)
     target_makefile_frag="config/mt-wince"
     ;;
 esac
@@ -3051,6 +3056,8 @@ case " $target_configdirs " in
     *-cygwin*)
       FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -L$$r/$(TARGET_SUBDIR)/winsup -L$$r/$(TARGET_SUBDIR)/winsup/cygwin -L$$r/$(TARGET_SUBDIR)/winsup/w32api/lib -isystem $$s/winsup/include -isystem $$s/winsup/cygwin/include -isystem $$s/winsup/w32api/include'
       ;;
+   arm*-*-mingw32ce* | arm*-*-cegcc*)
+     FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -mwin32 -static -idirafter ${prefix}/${target_alias}/include/w32api' ;;
    esac
 
    # If we're not building GCC, don't discard standard headers.
@@ -3113,6 +3120,9 @@ case "$target" in
   # however, use a symlink named 'mingw' in ${prefix} .
     FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -L${prefix}/${target}/lib -L${prefix}/mingw/lib -isystem ${prefix}/${target}/include -isystem ${prefix}/mingw/include'
     ;;
+  *-mingw32ce*)
+    # Special case for building for CE - no winsup
+    FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -L$$r/$(TARGET_SUBDIR)/winsup/mingw -L$$r/$(TARGET_SUBDIR)/winsup/w32api/lib -isystem $$s/../mingw/include -isystem $$s/../w32api/include' ;;
   *-mingw*)
   # MinGW can't be handled as Cygwin above since it does not use newlib.
     FLAGS_FOR_TARGET=$FLAGS_FOR_TARGET' -L$$r/$(TARGET_SUBDIR)/winsup/mingw -L$$r/$(TARGET_SUBDIR)/winsup/w32api/lib -isystem $$s/winsup/mingw/include -isystem $$s/winsup/w32api/include'
