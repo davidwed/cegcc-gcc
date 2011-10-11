@@ -33169,8 +33169,14 @@ msgstr ""
 
 #: fortran/io.c:1484
 #, gcc-internal-format
+<<<<<<< current
 msgid "Fortran 95 requires default INTEGER in %s tag at %L"
 msgstr ""
+=======
+<<<<<<< current
+msgid "typedef declaration invalid in parameter declaration"
+msgstr "déclaration typedef invalide dans le paramètre de la déclaration"
+>>>>>>> patched
 
 #: fortran/io.c:1492
 #, gcc-internal-format
@@ -46883,3 +46889,6 @@ msgstr "type de vecteur invalide pour l'attribut « %s »"
 
 #~ msgid "(debug) trace lexical analysis"
 #~ msgstr "(débug) trace l'analyse lexicale"
+=======
+msgid "typedef declaration invalid in parameter 
+>>>>>>> patched
