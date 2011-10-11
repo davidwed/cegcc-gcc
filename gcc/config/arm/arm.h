@@ -2070,14 +2070,22 @@ extern unsigned arm_pic_register;
    offset.  */
 extern int making_const_table;
 
+
 /* Handle pragmas for compatibility with Intel's compilers.  */
 /* Also abuse this to register additional C specific EABI attributes.  */
-#define REGISTER_TARGET_PRAGMAS() do {					\
+#define REGISTER_TARGET_PRAGMAS_BASE() do {				\
   c_register_pragma (0, "long_calls", arm_pr_long_calls);		\
   c_register_pragma (0, "no_long_calls", arm_pr_no_long_calls);		\
   c_register_pragma (0, "long_calls_off", arm_pr_long_calls_off);	\
+} while (0)
+
+/* Handle pragmas for compatibility with Intel's compilers.  */
+/* Also abuse this to register additional C specific EABI attributes.  */
+#define REGISTER_TARGET_PRAGMAS() do {					\
+  REGISTER_TARGET_PRAGMAS_BASE ();					\
   arm_lang_object_attributes_init(); \
 } while (0)
+
 
 /* Condition code information.  */
 /* Given a comparison code (EQ, NE, etc.) and the first operand of a COMPARE,
@@ -2210,6 +2218,11 @@ extern int making_const_table;
 	ASM_OUTPUT_DEF (FILE, LABEL1, LABEL2);			\
     }								\
   while (0)
+
+#define TARGET_ASM_FILE_END arm_file_end
+#define TARGET_ATTRIBUTE_TABLE arm_attribute_table
+#define TARGET_ENCODE_SECTION_INFO  arm_encode_section_info
+#define TARGET_STRIP_NAME_ENCODING arm_strip_name_encoding
 
 #ifdef HAVE_GAS_MAX_SKIP_P2ALIGN
 /* To support -falign-* switches we need to use .p2align so
@@ -2459,5 +2472,15 @@ enum arm_builtins
 /* The maximum number of parallel loads or stores we support in an ldm/stm
    instruction.  */
 #define MAX_LDM_STM_OPS 4
+
+/* Flags to mark dllimport/dllexport.  Used by PE ports, but handy to
+   have defined always, to avoid ifdefing.  */
+#define SYMBOL_FLAG_DLLIMPORT		(SYMBOL_FLAG_MACH_DEP << 1)
+#define SYMBOL_REF_DLLIMPORT_P(X) \
+	((SYMBOL_REF_FLAGS (X) & SYMBOL_FLAG_DLLIMPORT) != 0)
+
+#define SYMBOL_FLAG_DLLEXPORT		(SYMBOL_FLAG_MACH_DEP << 2)
+#define SYMBOL_REF_DLLEXPORT_P(X) \
+	((SYMBOL_REF_FLAGS (X) & SYMBOL_FLAG_DLLEXPORT) != 0)
 
 #endif /* ! GCC_ARM_H */

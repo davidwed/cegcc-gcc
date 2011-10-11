@@ -37,12 +37,20 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+/* Method Name string wrapper.  GetProcAddress on Windows CE takes a
+   wide string (it's really GetProcAddressW).  */
+#ifdef _WIN32_WCE
+# define MN(X) L ## X
+#else
+# define MN(X) X
+#endif
+
 #ifndef LIBGCC_SONAME
-#define LIBGCC_SONAME "libgcc_s.dll"
+#define LIBGCC_SONAME TEXT("libgcc_s.dll")
 #endif
 
 #ifndef LIBGCJ_SONAME
-#define LIBGCJ_SONAME "libgcj_s.dll"
+#define LIBGCJ_SONAME TEXT("libgcj_s.dll")
 #endif
 
 
@@ -94,7 +102,7 @@ __gcc_register_frame (void)
   HANDLE h = GetModuleHandle (LIBGCC_SONAME);
   if (h)
     register_frame_fn = (void (*) (const void *, struct object *))
-			GetProcAddress (h, "__register_frame_info");
+			GetProcAddress (h, MN("__register_frame_info"));
   else 
     register_frame_fn = __register_frame_info;
   if (register_frame_fn)
@@ -108,9 +116,12 @@ __gcc_register_frame (void)
       HANDLE h = GetModuleHandle (LIBGCJ_SONAME);
       if (h)
 	register_class_fn = (void (*) (const void *))
-			     GetProcAddress (h, "_Jv_RegisterClasses");
+			     GetProcAddress (h, MN("_Jv_RegisterClasses"));
+#if 0
+      /* looks like .weak isn't working... */
       else
 	register_class_fn = _Jv_RegisterClasses;
+#endif
 
       if (register_class_fn)
 	register_class_fn (__JCR_LIST__);
@@ -126,7 +137,7 @@ __gcc_deregister_frame (void)
   HANDLE h = GetModuleHandle (LIBGCC_SONAME);
   if (h)
     deregister_frame_fn = (void* (*) (const void *))
-			  GetProcAddress (h, "__deregister_frame_info");
+			  GetProcAddress (h, MN("__deregister_frame_info"));
   else 
     deregister_frame_fn = __deregister_frame_info;
   if (deregister_frame_fn)

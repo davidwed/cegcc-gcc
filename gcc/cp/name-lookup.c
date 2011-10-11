@@ -5658,6 +5658,33 @@ cp_emit_debug_info_for_using (tree t, tree context)
       && DECL_BUILT_IN (t))
     return;
 
+#if 0
+  /*
+    Here's the testcase I got, extracted for mingw32ce header files.
+    I
+    typedef void* FILE;
+    using ::FILE;
+
+    typedef void (*FILE3)(int);
+    using ::FILE3;
+
+    void test (void)
+    {
+    }
+
+    using ::test;
+
+    // 	This one crashed, due to no die for the ref to "void".
+    typedef void FILE2;
+    using ::FILE2;
+    */
+
+  /* Ignore this TYPE_DECL if it is of 'void' type.  */
+  if (TREE_CODE (t) == TYPE_DECL
+      && TREE_CODE (TREE_TYPE (t)) == VOID_TYPE)
+    return;
+#endif
+
   /* Do not supply context to imported_module_or_decl, if
      it is a global namespace.  */
   if (context == global_namespace)

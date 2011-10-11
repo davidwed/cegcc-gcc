@@ -289,3 +289,16 @@ struct ix86_first_cycle_multipass_data_
 # define TARGET_SCHED_FIRST_CYCLE_MULTIPASS_DATA_T	\
   struct ix86_first_cycle_multipass_data_
 #endif /* RTX_CODE */
+
+tree i386_dft_handle_exception_handler_attribute (tree *node,
+		tree name,
+		tree args,
+		int ARG_UNUSED (flags),
+		bool *no_add_attrs);
+const char * i386_dft_exception_handler (FILE *fp, char *name, tree decl);
+tree i386_handle_exception_handler_attribute (tree *node,
+		tree name,
+		tree args,
+		int ARG_UNUSED (flags),
+		bool *no_add_attrs);
+const char * i386_exception_handler (FILE *fp, char *name, tree decl);
