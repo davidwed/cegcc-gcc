@@ -1,6 +1,7 @@
 /* Threads compatibility routines for libgcc2 and libobjc.  */
 /* Compile this one with gcc.  */
-/* Copyright (C) 2004, 2005, 2007, 2008, 2009 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005, 2007, 2008, 2009, 2011
+   Free Software Foundation, Inc.
 
 This file is part of GCC.
 
@@ -171,7 +172,7 @@ __gthread_active_p (void)
 static inline int
 __gthread_active_p (void)
 {
-  static void *const __gthread_active_ptr 
+  static void *const __gthread_active_ptr
     = __extension__ (void *) &__gthrw_(pthread_cancel);
   return __gthread_active_ptr != 0;
 }

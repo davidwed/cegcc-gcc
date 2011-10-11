@@ -73,11 +73,11 @@ mmap_fixed (void *addr, size_t len, int prot, int flags, int fd, off_t off)
 	 that?  */
       for (i = 0; i < nmap; i++)
 	{
-	  unsigned long map_start = (unsigned long) pmap[i].pr_vaddr;
-	  unsigned long map_end = map_start + pmap[i].pr_size;
+	  uintptr_t map_start = (uintptr_t) pmap[i].pr_vaddr;
+	  uintptr_t map_end = map_start + pmap[i].pr_size;
 
-	  if ((unsigned long) addr < map_end
-	      && (unsigned long) addr+len > map_start)
+	  if ((uintptr_t) addr < map_end
+	      && (uintptr_t) addr+len > map_start)
 	    {
 	      overlap = 1;
 	      break;

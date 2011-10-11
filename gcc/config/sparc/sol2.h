@@ -177,27 +177,22 @@ along with GCC; see the file COPYING3.  If not see
     }								\
   while (0)
 
-/* Solaris 'as' has a bug: a .common directive in .tbss section
-   behaves as .tls_common rather than normal non-TLS .common.  */
-#undef  ASM_OUTPUT_ALIGNED_COMMON
-#define ASM_OUTPUT_ALIGNED_COMMON(FILE, NAME, SIZE, ALIGN)		\
-  do									\
-    {									\
-      if (TARGET_SUN_TLS						\
-	  && in_section							\
-	  && ((in_section->common.flags & (SECTION_TLS | SECTION_BSS))	\
-	      == (SECTION_TLS | SECTION_BSS)))				\
-	switch_to_section (bss_section);				\
-      fprintf ((FILE), "%s", COMMON_ASM_OP);				\
-      assemble_name ((FILE), (NAME));					\
-      fprintf ((FILE), ","HOST_WIDE_INT_PRINT_UNSIGNED",%u\n",		\
-	       (SIZE), (ALIGN) / BITS_PER_UNIT);			\
-    }									\
-  while (0)
-  
- /* Solaris/SPARC as uses a non-standard .section/.pushsection syntax.
-    While gas supports it, too, we prefer the standard variant.  */
- #ifndef USE_GAS
- #undef PUSHSECTION_FORMAT
- #define PUSHSECTION_FORMAT	"\t.pushsection\t\"%s\"\n"
- #endif
+/* This is how to output an assembler line that says to advance
+   the location counter to a multiple of 2**LOG bytes using the
+   NOP instruction as padding.  */
+#define ASM_OUTPUT_ALIGN_WITH_NOP(FILE,LOG)   \
+  if ((LOG) != 0)                             \
+    fprintf (FILE, "\t.align %d,0x1000000\n", (1<<(LOG)))
+
+/* Use Solaris ELF section syntax.  */
+#undef TARGET_ASM_NAMED_SECTION
+#define TARGET_ASM_NAMED_SECTION sparc_solaris_elf_asm_named_section
+
+/* Solaris/SPARC as uses a non-standard .section/.pushsection syntax.
+   While gas supports it, too, we prefer the standard variant.  */
+#ifndef USE_GAS
+#undef PUSHSECTION_FORMAT
+#define PUSHSECTION_FORMAT	"\t.pushsection\t\"%s\"\n"
+#endif
+
+#define MD_UNWIND_SUPPORT "config/sparc/sol2-unwind.h"

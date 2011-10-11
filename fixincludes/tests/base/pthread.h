@@ -96,11 +96,6 @@
 #endif  /* GLIBC_MUTEX_INIT_CHECK */
 
 
-#if defined( PTHREAD_PAGE_SIZE_CHECK )
-extern int __page_size;
-#endif  /* PTHREAD_PAGE_SIZE_CHECK */
-
-
 #if defined( IRIX_PTHREAD_INIT_CHECK )
 #define PTHREAD_MUTEX_INITIALIZER	{ { 0 } }
 #define PTHREAD_COND_INITIALIZER	{ { 0 } }
