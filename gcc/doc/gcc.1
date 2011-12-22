@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GCC 1"
-.TH GCC 1 "2011-06-27" "gcc-4.6.1" "GNU"
+.TH GCC 1 "2011-10-26" "gcc-4.6.2" "GNU"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -619,7 +619,8 @@ in the following sections.
 \&\-momit\-leaf\-frame\-pointer  \-mno\-red\-zone \-mno\-tls\-direct\-seg\-refs 
 \&\-mcmodel=\fR\fIcode-model\fR \fB\-mabi=\fR\fIname\fR 
 \&\fB\-m32  \-m64 \-mlarge\-data\-threshold=\fR\fInum\fR 
-\&\fB\-msse2avx \-mfentry \-m8bit\-idiv\fR
+\&\fB\-msse2avx \-mfentry \-m8bit\-idiv 
+\&\-mavx256\-split\-unaligned\-load \-mavx256\-split\-unaligned\-store\fR
 .Sp
 \&\fIi386 and x86\-64 Windows Options\fR
 \&\fB\-mconsole \-mcygwin \-mno\-cygwin \-mdll
@@ -881,7 +882,8 @@ See \s-1RS/6000\s0 and PowerPC Options.
 \&\-mlittle\-endian 
 \&\-mstack\-bias  \-mno\-stack\-bias 
 \&\-munaligned\-doubles  \-mno\-unaligned\-doubles 
-\&\-mv8plus  \-mno\-v8plus  \-mvis  \-mno\-vis\fR
+\&\-mv8plus  \-mno\-v8plus  \-mvis  \-mno\-vis 
+\&\-mfix\-at697f\fR
 .Sp
 \&\fI\s-1SPU\s0 Options\fR
 \&\fB\-mwarn\-reloc \-merror\-reloc 
@@ -9662,6 +9664,123 @@ and long long will be 4 bytes.  Please note that this option does not
 comply to the C standards, but it will provide you with smaller code
 size.
 .PP
+\f(CW\*(C`EIND\*(C'\fR and Devices with more than 128k Bytes of Flash
+.IX Subsection "EIND and Devices with more than 128k Bytes of Flash"
+.PP
+Pointers in the implementation are 16 bits wide.
+The address of a function or label is represented as word address so
+that indirect jumps and calls can address any code address in the
+range of 64k words.
+.PP
+In order to faciliate indirect jump on devices with more than 128k
+bytes of program memory space, there is a special function register called
+\&\f(CW\*(C`EIND\*(C'\fR that serves as most significant part of the target address
+when \f(CW\*(C`EICALL\*(C'\fR or \f(CW\*(C`EIJMP\*(C'\fR instructions are used.
+.PP
+Indirect jumps and calls on these devices are handled as follows and
+are subject to some limitations:
+.IP "\(bu" 4
+The compiler never sets \f(CW\*(C`EIND\*(C'\fR.
+.IP "\(bu" 4
+The startup code from libgcc never sets \f(CW\*(C`EIND\*(C'\fR.
+Notice that startup code is a blend of code from libgcc and avr-libc.
+For the impact of avr-libc on \f(CW\*(C`EIND\*(C'\fR, see the
+avr-libc\ user\ manual (\f(CW\*(C`http://nongnu.org/avr\-libc/user\-manual\*(C'\fR).
+.IP "\(bu" 4
+The compiler uses \f(CW\*(C`EIND\*(C'\fR implicitely in \f(CW\*(C`EICALL\*(C'\fR/\f(CW\*(C`EIJMP\*(C'\fR
+instructions or might read \f(CW\*(C`EIND\*(C'\fR directly.
+.IP "\(bu" 4
+The compiler assumes that \f(CW\*(C`EIND\*(C'\fR never changes during the startup
+code or run of the application. In particular, \f(CW\*(C`EIND\*(C'\fR is not
+saved/restored in function or interrupt service routine
+prologue/epilogue.
+.IP "\(bu" 4
+It is legitimate for user-specific startup code to set up \f(CW\*(C`EIND\*(C'\fR
+early, for example by means of initialization code located in
+section \f(CW\*(C`.init3\*(C'\fR, and thus prior to general startup code that
+initializes \s-1RAM\s0 and calls constructors.
+.IP "\(bu" 4
+For indirect calls to functions and computed goto, the linker will
+generate \fIstubs\fR. Stubs are jump pads sometimes also called
+\&\fItrampolines\fR. Thus, the indirect call/jump will jump to such a stub.
+The stub contains a direct jump to the desired address.
+.IP "\(bu" 4
+Stubs will be generated automatically by the linker if
+the following two conditions are met:
+.RS 4
+.ie n .IP "\-<The address of a label is taken by means of the ""gs"" modifier>" 4
+.el .IP "\-<The address of a label is taken by means of the \f(CWgs\fR modifier>" 4
+.IX Item "-<The address of a label is taken by means of the gs modifier>"
+(short for \fIgenerate stubs\fR) like so:
+.Sp
+.Vb 2
+\&        LDI r24, lo8(gs(<func>))
+\&        LDI r25, hi8(gs(<func>))
+.Ve
+.IP "\-<The final location of that label is in a code segment>" 4
+.IX Item "-<The final location of that label is in a code segment>"
+\&\fIoutside\fR the segment where the stubs are located.
+.RE
+.RS 4
+.RE
+.IP "\(bu" 4
+The compiler will emit such \f(CW\*(C`gs\*(C'\fR modifiers for code labels in the
+following situations:
+.RS 4
+.IP "\-<Taking address of a function or code label.>" 4
+.IX Item "-<Taking address of a function or code label.>"
+.PD 0
+.IP "\-<Computed goto.>" 4
+.IX Item "-<Computed goto.>"
+.IP "\-<If prologue-save function is used, see \fB\-mcall\-prologues\fR>" 4
+.IX Item "-<If prologue-save function is used, see -mcall-prologues>"
+.PD
+command line option.
+.IP "\-<Switch/case dispatch tables. If you do not want such dispatch>" 4
+.IX Item "-<Switch/case dispatch tables. If you do not want such dispatch>"
+tables you can specify the \fB\-fno\-jump\-tables\fR command line option.
+.IP "\-<C and \*(C+ constructors/destructors called during startup/shutdown.>" 4
+.IX Item "-<C and  constructors/destructors called during startup/shutdown.>"
+.PD 0
+.ie n .IP "\-<If the tools hit a ""gs()"" modifier explained above.>" 4
+.el .IP "\-<If the tools hit a \f(CWgs()\fR modifier explained above.>" 4
+.IX Item "-<If the tools hit a gs() modifier explained above.>"
+.RE
+.RS 4
+.RE
+.IP "\(bu" 4
+.PD
+The default linker script is arranged for code with \f(CW\*(C`EIND = 0\*(C'\fR.
+If code is supposed to work for a setup with \f(CW\*(C`EIND != 0\*(C'\fR, a custom
+linker script has to be used in order to place the sections whose
+name start with \f(CW\*(C`.trampolines\*(C'\fR into the segment where \f(CW\*(C`EIND\*(C'\fR
+points to.
+.IP "\(bu" 4
+Jumping to non-symbolic addresses like so is \fInot\fR supported:
+.Sp
+.Vb 5
+\&        int main (void)
+\&        {
+\&            /* Call function at word address 0x2 */
+\&            return ((int(*)(void)) 0x2)();
+\&        }
+.Ve
+.Sp
+Instead, a stub has to be set up:
+.Sp
+.Vb 3
+\&        int main (void)
+\&        {
+\&            extern int func_4 (void);
+\&        
+\&            /* Call function at byte address 0x4 */
+\&            return func_4();
+\&        }
+.Ve
+.Sp
+and the application be linked with \f(CW\*(C`\-Wl,\-\-defsym,func_4=0x4\*(C'\fR.
+Alternatively, \f(CW\*(C`func_4\*(C'\fR can be defined in the linker script.
+.PP
 \fIBlackfin Options\fR
 .IX Subsection "Blackfin Options"
 .IP "\fB\-mcpu=\fR\fIcpu\fR[\fB\-\fR\fIsirevision\fR]" 4
@@ -11191,6 +11310,11 @@ and \s-1SSE4\s0.2 instruction set support.
 .IX Item "corei7-avx"
 Intel Core i7 \s-1CPU\s0 with 64\-bit extensions, \s-1MMX\s0, \s-1SSE\s0, \s-1SSE2\s0, \s-1SSE3\s0, \s-1SSSE3\s0,
 \&\s-1SSE4\s0.1, \s-1SSE4\s0.2, \s-1AVX\s0, \s-1AES\s0 and \s-1PCLMUL\s0 instruction set support.
+.IP "\fIcore-avx-i\fR" 4
+.IX Item "core-avx-i"
+Intel Core \s-1CPU\s0 with 64\-bit extensions, \s-1MMX\s0, \s-1SSE\s0, \s-1SSE2\s0, \s-1SSE3\s0, \s-1SSSE3\s0,
+\&\s-1SSE4\s0.1, \s-1SSE4\s0.2, \s-1AVX\s0, \s-1AES\s0, \s-1PCLMUL\s0, \s-1FSGSBASE\s0, \s-1RDRND\s0 and F16C instruction
+set support.
 .IP "\fIatom\fR" 4
 .IX Item "atom"
 Intel Atom \s-1CPU\s0 with 64\-bit extensions, \s-1MMX\s0, \s-1SSE\s0, \s-1SSE2\s0, \s-1SSE3\s0 and \s-1SSSE3\s0
@@ -11825,6 +11949,13 @@ much faster than 32bit/64bit integer divide.  This option will generate a
 runt-time check.  If both dividend and divisor are within range of 0
 to 255, 8bit unsigned integer divide will be used instead of
 32bit/64bit integer divide.
+.IP "\fB\-mavx256\-split\-unaligned\-load\fR" 4
+.IX Item "-mavx256-split-unaligned-load"
+.PD 0
+.IP "\fB\-mavx256\-split\-unaligned\-store\fR" 4
+.IX Item "-mavx256-split-unaligned-store"
+.PD
+Split 32\-byte \s-1AVX\s0 unaligned load and store.
 .PP
 These \fB\-m\fR switches are supported in addition to the above
 on \s-1AMD\s0 x86\-64 processors in 64\-bit environments.
@@ -16055,6 +16186,10 @@ mode for all \s-1SPARC\-V9\s0 processors.
 .PD
 With \fB\-mvis\fR, \s-1GCC\s0 generates code that takes advantage of the UltraSPARC
 Visual Instruction Set extensions.  The default is \fB\-mno\-vis\fR.
+.IP "\fB\-mfix\-at697f\fR" 4
+.IX Item "-mfix-at697f"
+Enable the documented workaround for the single erratum of the Atmel \s-1AT697F\s0
+processor (which corresponds to erratum #13 of the \s-1AT697E\s0 processor).
 .PP
 These \fB\-m\fR options are supported in addition to the above
 on \s-1SPARC\-V9\s0 processors in 64\-bit environments:

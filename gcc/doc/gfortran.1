@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GFORTRAN 1"
-.TH GFORTRAN 1 "2011-06-27" "gcc-4.6.1" "GNU"
+.TH GFORTRAN 1 "2011-10-26" "gcc-4.6.2" "GNU"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -207,7 +207,7 @@ by type.  Explanations are in the following sections.
 .IP "\fICode Generation Options\fR" 4
 .IX Item "Code Generation Options"
 \&\fB\-fno\-automatic  \-ff2c  \-fno\-underscoring 
-\&\-fwhole\-file \-fsecond\-underscore 
+\&\-fno\-whole\-file \-fsecond\-underscore 
 \&\-fbounds\-check \-fcheck\-array\-temporaries  \-fmax\-array\-constructor =\fR\fIn\fR 
 \&\fB\-fcheck=\fR\fI<all|array\-temps|bounds|do|mem|pointer|recursion>\fR 
 \&\fB\-fcoarray=\fR\fI<none|single>\fR \fB\-fmax\-stack\-var\-size=\fR\fIn\fR 
@@ -989,18 +989,21 @@ issues so that debugging always involves using the names as they appear
 in the source, even if the names as seen by the linker are mangled to
 prevent accidental linking between procedures with incompatible
 interfaces.
-.IP "\fB\-fwhole\-file\fR" 4
-.IX Item "-fwhole-file"
-By default, \s-1GNU\s0 Fortran parses, resolves and translates each procedure
-in a file separately.  Using this option modifies this such that the
-whole file is parsed and placed in a single front-end tree.  During
-resolution, in addition to all the usual checks and fixups, references
+.IP "\fB\-fno\-whole\-file\fR" 4
+.IX Item "-fno-whole-file"
+This flag causes the compiler to resolve and translate each procedure in
+a file separately.
+.Sp
+By default, the whole file is parsed and placed in a single front-end tree.
+During resolution, in addition to all the usual checks and fixups, references
 to external procedures that are in the same file effect resolution of
-that procedure, if not already done, and a check of the interfaces. The
+that procedure, if not already done, and a check of the interfaces.  The
 dependences are resolved by changing the order in which the file is
 translated into the backend tree.  Thus, a procedure that is referenced
 is translated before the reference and the duplication of backend tree
 declarations eliminated.
+.Sp
+The \fB\-fno\-whole\-file\fR option is deprecated and may lead to wrong code.
 .IP "\fB\-fsecond\-underscore\fR" 4
 .IX Item "-fsecond-underscore"
 By default, \s-1GNU\s0 Fortran appends an underscore to external
