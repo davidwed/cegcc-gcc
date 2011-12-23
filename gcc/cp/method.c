@@ -819,6 +819,10 @@ locate_fn_flags (tree type, tree name, tree argtype, int flags,
       type = BINFO_TYPE (binfo);
     }
 
+  /* hack to disable the garbage collector, to protect the object "ob"
+     that is not yet referenced */
+  function_depth++;
+
   ob = build_stub_object (cp_build_reference_type (type, false));
   args = make_tree_vector ();
   if (argtype)
@@ -829,6 +833,8 @@ locate_fn_flags (tree type, tree name, tree argtype, int flags,
 
   fns = lookup_fnfields (binfo, name, 0);
   rval = build_new_method_call (ob, fns, &args, binfo, flags, &fn, complain);
+
+  function_depth--;
 
   release_tree_vector (args);
   if (fn && rval == error_mark_node)
