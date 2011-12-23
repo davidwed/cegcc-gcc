@@ -487,6 +487,9 @@ arm_pe_maybe_record_exported_symbol (tree decl, const char *name, int is_data)
   rtx symbol;
   struct export_list *p;
 
+  if (!decl)
+    return;
+
   symbol = XEXP (DECL_RTL (decl), 0);
   gcc_assert (GET_CODE (symbol) == SYMBOL_REF);
   if (!SYMBOL_REF_DLLEXPORT_P (symbol))
