@@ -119,8 +119,11 @@ create_file_directory (char *filename)
 #else
             && mkdir (filename) == -1
 #endif
+#ifdef TARGET_POSIX_IO
             /* The directory might have been made by another process.  */
-	    && errno != EEXIST)
+	    && errno != EEXIST
+#endif
+	    )
 	  {
             fprintf (stderr, "profiling:%s:Cannot create directory\n",
 		     filename);
