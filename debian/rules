@@ -73,7 +73,7 @@ binary-arch: install
 	dh_installchangelogs -a
 	dh_install -a
 	dh_link -a
-	dh_strip -p gcc-arm-ming32ce --dbg-package=gcc-arm-ming32ce-dbg --exclude=/usr/arm-mingw32ce --exclude=/usr/lib/gcc/arm-mingw32ce
+	dh_strip -p gcc-arm-mingw32ce --dbg-package=gcc-arm-mingw32ce-dbg --exclude=/usr/arm-mingw32ce --exclude=/usr/lib/gcc/arm-mingw32ce
 	dh_compress -a
 	dh_fixperms -a
 	dh_installdeb -a

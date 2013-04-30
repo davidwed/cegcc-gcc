@@ -1,6 +1,6 @@
 cegcc-gcc (4.6.3-2) unstable; urgency=low
 
-  * 
+  * rename ming32ce to mingw32ce
 
  --
 

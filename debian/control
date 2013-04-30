@@ -4,22 +4,30 @@ Priority: extra
 Maintainer: Max Kellermann <max@duempel.org>
 Build-Depends: debhelper (>= 7),
  libgmp-dev (>= 4.2), libmpfr-dev (>= 2.3.1), libmpc-dev (>= 0.8),
- binutils-arm-ming32ce, mingw-arm-ming32ce, w32api-arm-ming32ce
+ binutils-arm-mingw32ce, mingw-arm-mingw32ce, w32api-arm-mingw32ce
 Standards-Version: 3.9.1
 Vcs-git: git://git.xcsoar.org/xcsoar/max/cegcc-gcc.git
 
 Package: gcc-arm-ming32ce
+Architecture: all
+Depends: gcc-arm-mingw32ce (= ${source:Version})
+Description: transitional dummy package
+ transitional dummy package
+
+Package: gcc-arm-mingw32ce
 Architecture: any
 Depends: ${shlibs:Depends},
- binutils-arm-ming32ce,
- mingw-arm-ming32ce, w32api-arm-ming32ce
+ binutils-arm-mingw32ce,
+ mingw-arm-mingw32ce, w32api-arm-mingw32ce
+Conflicts: gcc-arm-ming32ce (<= 4.6.3-1)
 Description: Cross-gcc for Windows CE
  A cross-compiler that builds Windows CE binaries.
 
-Package: gcc-arm-ming32ce-dbg
+Package: gcc-arm-mingw32ce-dbg
 Architecture: any
-Depends: gcc-arm-ming32ce (= ${binary:Version})
-Description: Debug symbols for gcc-arm-ming32ce
+Depends: gcc-arm-mingw32ce (= ${binary:Version})
+Conflicts: gcc-arm-ming32ce-dbg
+Description: Debug symbols for gcc-arm-mingw32ce
  A cross-compiler that builds Windows CE binaries.
  .
  This package provides the debugging symbols.
