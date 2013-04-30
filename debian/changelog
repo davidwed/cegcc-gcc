@@ -1,3 +1,9 @@
+cegcc-gcc (4.6.3-2) unstable; urgency=low
+
+  * 
+
+ --
+
 cegcc-gcc (4.6.3-1) unstable; urgency=low
 
   * initial Debian package
